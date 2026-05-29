@@ -1,0 +1,62 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>旅行条件入力 | LocalTrip Builder</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="page-shell narrow-shell">
+        <header class="page-header">
+            <p class="eyebrow">Step 4.6</p>
+            <h1>旅行条件入力</h1>
+            <p class="description">
+                登録済みの観光スポットから候補を抽出し、AIプラン生成に渡す前の下書きを作成します。
+            </p>
+        </header>
+
+        <div class="security-note">
+            <strong>入力時の注意</strong>
+            <p>
+                氏名、電話番号、メールアドレス、住所、予約番号などの個人情報や秘密情報は入力しないでください。
+                将来的に外部AI APIへ送信する可能性があるのは、旅行条件、候補スポット、プロンプト下書きのみです。
+            </p>
+        </div>
+
+        <form class="form-panel" method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group{% if field.field.widget.input_type == 'checkbox' %} form-check{% endif %}">
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% else %}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <p class="help-text">{{ field.help_text }}</p>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button class="button-primary" type="submit">候補スポットを抽出する</button>
+                <a class="button-secondary" href="{% url 'core:home' %}">トップへ戻る</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

@@ -1,0 +1,125 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI観光プラン生成結果 | LocalTrip Builder</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="page-header">
+            <p class="eyebrow">AI観光プラン生成結果</p>
+            <h1>{{ plan_request.title|default:"旅行プラン作成依頼" }}</h1>
+            <p class="description">
+                生成時に選択したAIプロバイダーの結果です。実運用では使用するAIを1つ選択して生成する想定です。
+            </p>
+        </header>
+
+        <div class="security-note">
+            <strong>セキュリティ注意</strong>
+            <p>
+                この画面にはAIに渡したプロンプトと生成結果が表示されます。個人情報や秘密情報が含まれていないか確認し、画面共有やログ転記の際は注意してください。
+                Gemini、OpenAI、Claudeを選択した場合は、使用したプロンプトが選択したAI APIへ送信されています。
+            </p>
+        </div>
+
+        <section class="summary-grid">
+            <article class="summary-panel">
+                <h2>生成情報</h2>
+                <dl class="summary-list">
+                    <dt>プロバイダー</dt>
+                    <dd>{{ result.get_provider_display }}</dd>
+                    <dt>モデル</dt>
+                    <dd>{{ result.model_name|default:"未設定" }}</dd>
+                    <dt>ステータス</dt>
+                    <dd>{{ result.get_status_display }}</dd>
+                    <dt>生成日時</dt>
+                    <dd>{{ result.created_at }}</dd>
+                </dl>
+            </article>
+
+            <article class="summary-panel">
+                <h2>入力条件</h2>
+                <dl class="summary-list">
+                    <dt>地域</dt>
+                    <dd>{{ plan_request.region }}</dd>
+                    <dt>旅行日数</dt>
+                    <dd>{{ plan_request.get_days_display }}</dd>
+                    <dt>移動手段</dt>
+                    <dd>{{ plan_request.get_transportation_display }}</dd>
+                    <dt>旅行者タイプ</dt>
+                    <dd>{{ plan_request.get_traveler_type_display }}</dd>
+                </dl>
+            </article>
+        </section>
+
+        <section class="result-panel">
+            <h2>生成された旅行プラン</h2>
+            <pre class="prompt-preview result-text">{{ result.generated_text }}</pre>
+            {% if result.error_message %}
+                <div class="form-errors">{{ result.error_message }}</div>
+            {% endif %}
+        </section>
+
+        <section class="candidate-section">
+            <div class="section-title-row">
+                <h2>候補スポット一覧</h2>
+                <span class="count-badge">{{ candidate_spots|length }}件</span>
+            </div>
+
+            {% if directions_url %}
+                <div class="map-route-panel">
+                    <a class="button-secondary" href="{{ directions_url }}" target="_blank" rel="noopener">
+                        候補スポットのルートをGoogle Mapsで開く
+                    </a>
+                    <p class="help-text">APIキー不要のGoogle Maps URLです。画面表示だけではGoogle Maps APIを呼び出しません。</p>
+                </div>
+            {% endif %}
+
+            {% if candidate_spots %}
+                <div class="candidate-grid">
+                    {% for spot in candidate_spots %}
+                        <article class="candidate-card">
+                            <div>
+                                <p class="candidate-category">{{ spot.category }}</p>
+                                <h3>{{ spot.name }}</h3>
+                                <p>{{ spot.short_description|default:"説明は未登録です。" }}</p>
+                            </div>
+                            <dl class="spot-meta">
+                                <dt>住所</dt>
+                                <dd>{{ spot.address|default:"未登録" }}</dd>
+                                <dt>地図</dt>
+                                <dd>
+                                    {% if spot.google_maps_url %}
+                                        <a href="{{ spot.google_maps_url }}" target="_blank" rel="noopener">Google Maps</a>
+                                    {% else %}
+                                        未登録
+                                    {% endif %}
+                                </dd>
+                                <dt>滞在目安</dt>
+                                <dd>{{ spot.estimated_stay_minutes }}分</dd>
+                            </dl>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">候補スポットは保存されていません。</div>
+            {% endif %}
+        </section>
+
+        <section class="result-panel">
+            <h2>使用したプロンプト</h2>
+            <pre class="prompt-preview result-text">{{ result.prompt }}</pre>
+        </section>
+
+        <div class="form-actions">
+            <a class="button-primary" href="{% url 'plans:result_pdf' result.pk %}">PDFをダウンロード</a>
+            <a class="button-secondary" href="{% url 'plans:preview' plan_request.pk %}">プレビュー画面へ戻る</a>
+            <a class="button-secondary" href="{% url 'plans:create' %}">新しい条件で作成する</a>
+            <a class="button-secondary" href="{% url 'core:home' %}">トップページへ戻る</a>
+        </div>
+    </main>
+</body>
+</html>

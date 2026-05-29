@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LocalTrip Builder</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="hero">
+            <p class="eyebrow">地方観光プラン作成アプリ</p>
+            <h1>LocalTrip Builder</h1>
+            <p class="subtitle">AIで地方観光プランを自動作成するWebアプリ</p>
+            <p class="description">
+                旅行者の希望条件に合わせて、観光スポット、グルメ、移動ルートを組み合わせた地方観光プランを作成します。
+            </p>
+            <div class="hero-actions">
+                <a class="button-primary" href="{% url 'plans:create' %}">旅行条件を入力する</a>
+                <a class="button-secondary" href="/admin/">管理画面を開く</a>
+            </div>
+        </section>
+
+        <section class="feature-grid" aria-label="主要機能">
+            {% for card in cards %}
+                <article class="feature-card">
+                    <h2>{{ card.title }}</h2>
+                    <p>{{ card.description }}</p>
+                    <span class="status">準備中</span>
+                </article>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>
