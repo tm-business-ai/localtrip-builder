@@ -80,16 +80,26 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DATABASE_NAME", "localtrip_db"),
-        "USER": os.getenv("DATABASE_USER", "localtrip_user"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD", "localtrip_password"),
-        "HOST": os.getenv("DATABASE_HOST", "localhost"),
-        "PORT": os.getenv("DATABASE_PORT", "5432"),
+DATABASE_ENGINE = os.getenv("DATABASE_ENGINE", "postgresql").lower()
+
+if DATABASE_ENGINE == "sqlite":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.getenv("SQLITE_DATABASE_NAME", BASE_DIR / "db.sqlite3"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DATABASE_NAME", "localtrip_db"),
+            "USER": os.getenv("DATABASE_USER", "localtrip_user"),
+            "PASSWORD": os.getenv("DATABASE_PASSWORD", "localtrip_password"),
+            "HOST": os.getenv("DATABASE_HOST", "localhost"),
+            "PORT": os.getenv("DATABASE_PORT", "5432"),
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [

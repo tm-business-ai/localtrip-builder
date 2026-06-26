@@ -13,11 +13,11 @@ def home(request):
         },
         {
             "title": "AIプラン生成",
-            "description": "Gemini、OpenAI、Claudeを切り替えられる生成機能を今後追加します。",
+            "description": "Mock、Gemini、OpenAI、Claudeを切り替えて旅行プランを生成できます。",
         },
         {
             "title": "Google Maps連携",
-            "description": "移動ルート、地図リンク、周辺情報の連携を予定しています。",
+            "description": "候補スポットの地図リンクとGoogle MapsルートURLを生成できます。",
         },
     ]
     return render(request, "core/home.html", {"cards": cards})

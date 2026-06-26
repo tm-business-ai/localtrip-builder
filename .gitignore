@@ -39,3 +39,4 @@ htmlcov/
 tmp/
 temp/
 *.tmp
+.tmp_chrome*/
