@@ -226,4 +226,4 @@ $env:DATABASE_ENGINE="sqlite"; python manage.py test
 - Google Mapsルート表示の詳細化
 - PDFレイアウトの改善
 - Django Adminの入力補助とデータ管理改善
-- 本番デプロイ向け設定の整理
+
