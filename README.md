@@ -219,12 +219,6 @@ $env:DATABASE_ENGINE="sqlite"; python manage.py test
 - 旅行条件やAIプロンプトに、氏名、電話番号、メールアドレス、住所、予約番号などの個人情報を入力しないでください。
 - 管理画面 `/admin/` は管理者のみが利用する前提です。
 
-## 関連ドキュメント
-
-- [デモシナリオ](docs/demo_scenario.md)
-- [プロダクト概要](docs/product_overview.md)
-- [公開前チェックリスト](docs/publish_checklist.md)
-
 ## 今後の改善案
 
 - AIプロンプト品質の改善
